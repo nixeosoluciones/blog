@@ -28,7 +28,7 @@ export function renderFooter() {
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; ${new Date().getFullYear()} Blog Dr. House. Todos los derechos reservados.</p>
+        <p>&copy; ${new Date().getFullYear()} <a href="https://nixeosoluciones.com" target="_blank" rel="noopener">nixeosoluciones.com</a> — Blog Dr. House. Todos los derechos reservados.</p>
       </div>
     </div>
   `;
