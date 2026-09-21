@@ -11,8 +11,8 @@ export function renderHeader() {
     <div class="header">
       <div class="header-inner">
         <a href="/" class="header-logo" data-link>
-          <div class="header-logo-icon">H</div>
-          <span>Blog Dr. House</span>
+          <div class="header-logo-icon">FL</div>
+          <span>Fansite Latam</span>
         </a>
         <nav class="header-nav">
           <a href="/" data-link>Inicio</a>

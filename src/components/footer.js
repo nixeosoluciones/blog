@@ -4,7 +4,7 @@ export function renderFooter() {
     <div class="footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <h3>Blog Dr. House</h3>
+          <h3>Fansite Latam</h3>
           <p>Plataforma de historias alternativas, fan fiction y contenido de fans.</p>
         </div>
         <div class="footer-section">
@@ -28,7 +28,7 @@ export function renderFooter() {
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; ${new Date().getFullYear()} <a href="https://nixeosoluciones.com" target="_blank" rel="noopener">nixeosoluciones.com</a> — Blog Dr. House. Todos los derechos reservados.</p>
+        <p>&copy; ${new Date().getFullYear()} <a href="https://nixeosoluciones.com" target="_blank" rel="noopener">nixeosoluciones.com</a> — Fansite Latam. Todos los derechos reservados.</p>
       </div>
     </div>
   `;
