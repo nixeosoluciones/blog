@@ -41,7 +41,7 @@ async function init() {
     document.documentElement.setAttribute('data-theme', getThemePreference());
 
     renderHeader();
-    renderFooter();
+    await renderFooter();
     initSearchModal();
 
   addRoute('/', async () => { renderHeader(); await renderHomePage(); });

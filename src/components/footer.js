@@ -1,5 +1,22 @@
-export function renderFooter() {
+import { getCategories } from '../services/categories.js';
+
+export async function renderFooter() {
   const footer = document.getElementById('main-footer');
+
+  let categoriesHTML = '';
+  try {
+    const categories = await getCategories();
+    if (categories.length) {
+      categoriesHTML = categories.slice(0, 5).map(cat =>
+        `<a href="/categorias/${cat.slug}" data-link>${cat.name}</a>`
+      ).join('');
+    } else {
+      categoriesHTML = '<p style="color:var(--text-tertiary);font-size:0.75rem">Sin categorías aún</p>';
+    }
+  } catch (e) {
+    categoriesHTML = '';
+  }
+
   footer.innerHTML = `
     <div class="footer">
       <div class="footer-inner">
@@ -16,10 +33,7 @@ export function renderFooter() {
         </div>
         <div class="footer-section">
           <h4>Categorías</h4>
-          <a href="/categorias/drama" data-link>Drama</a>
-          <a href="/categorias/ciencia-ficcion" data-link>Ciencia Ficción</a>
-          <a href="/categorias/historia-alternativa" data-link>Historia Alternativa</a>
-          <a href="/categorias/fan-fiction" data-link>Fan Fiction</a>
+          ${categoriesHTML}
         </div>
         <div class="footer-section">
           <h4>Sitio</h4>
