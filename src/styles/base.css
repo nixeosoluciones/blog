@@ -80,6 +80,8 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -90,6 +92,8 @@ body {
   transition: background-color var(--transition), color var(--transition);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 a {
@@ -124,7 +128,13 @@ input, textarea, select {
 .container {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 1.5rem;
+  }
 }
 
 .sr-only {
@@ -136,4 +146,14 @@ input, textarea, select {
   overflow: hidden;
   clip: rect(0,0,0,0);
   border: 0;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --radius-xl: 16px;
+    --radius-lg: 12px;
+  }
+  .container {
+    padding: 0 0.75rem;
+  }
 }

@@ -1,18 +1,25 @@
 .header {
   position: sticky;
-  top: 12px;
+  top: 8px;
   z-index: 100;
-  padding: 0 12px;
+  padding: 0 8px;
+}
+
+@media (min-width: 640px) {
+  .header {
+    top: 12px;
+    padding: 0 12px;
+  }
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: 52px;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 0.75rem;
   background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -21,14 +28,29 @@
   box-shadow: var(--shadow-lg);
 }
 
+@media (min-width: 640px) {
+  .header-inner {
+    height: 56px;
+    padding: 0 1.25rem;
+  }
+}
+
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
+  gap: 0.5rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .header-logo {
+    font-size: 1rem;
+    gap: 0.6rem;
+  }
 }
 
 .header-logo:hover {
@@ -36,8 +58,8 @@
 }
 
 .header-logo-icon {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   background: var(--color-primary);
   border-radius: var(--radius-sm);
   display: flex;
@@ -45,13 +67,28 @@
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .header-logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
 }
 
 .header-nav {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .header-nav {
+    display: flex;
+  }
 }
 
 .header-nav a {
@@ -72,7 +109,13 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+}
+
+@media (min-width: 640px) {
+  .header-actions {
+    gap: 0.5rem;
+  }
 }
 
 .btn {
@@ -133,13 +176,27 @@
 }
 
 .btn-sm {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.8rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+  }
 }
 
 .btn-lg {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
 }
 
 .btn-icon {
@@ -153,7 +210,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.75rem;
+  padding: 0.35rem 0.65rem;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -161,6 +218,12 @@
   font-size: 0.8rem;
   cursor: pointer;
   transition: all var(--transition);
+}
+
+@media (min-width: 640px) {
+  .search-btn {
+    padding: 0.4rem 0.75rem;
+  }
 }
 
 .search-btn:hover {
@@ -186,7 +249,7 @@
 }
 
 .hamburger {
-  display: none;
+  display: flex;
   width: 32px;
   height: 32px;
   align-items: center;
@@ -195,12 +258,18 @@
   color: var(--text-secondary);
 }
 
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
+  }
+}
+
 .mobile-menu {
   display: none;
   position: fixed;
-  top: 80px;
-  left: 12px;
-  right: 12px;
+  top: 68px;
+  left: 8px;
+  right: 8px;
   background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -208,9 +277,18 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
   z-index: 99;
-  padding: 1rem;
+  padding: 0.75rem;
   overflow-y: auto;
-  max-height: 70vh;
+  max-height: calc(100vh - 80px);
+}
+
+@media (min-width: 640px) {
+  .mobile-menu {
+    top: 80px;
+    left: 12px;
+    right: 12px;
+    padding: 1rem;
+  }
 }
 
 .mobile-menu.active {
@@ -219,7 +297,7 @@
 
 .mobile-menu a {
   display: block;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 0.85rem;
   color: var(--text-primary);
   border-radius: var(--radius-md);
   font-weight: 500;
@@ -242,7 +320,13 @@
   align-items: flex-start;
   justify-content: center;
   z-index: 1000;
-  padding: 4rem 1rem 1rem;
+  padding: 5rem 0.75rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .modal-overlay {
+    padding: 4rem 1rem 1rem;
+  }
 }
 
 .modal {
@@ -352,14 +436,11 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .header-nav {
-    display: none;
-  }
-  .hamburger {
     display: flex;
   }
-  .search-btn span {
+  .hamburger {
     display: none;
   }
 }
