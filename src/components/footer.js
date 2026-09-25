@@ -43,7 +43,6 @@ export async function renderFooter() {
       </div>
       <div class="footer-bottom">
         <p>&copy; ${new Date().getFullYear()} <a href="https://nixeosoluciones.com" target="_blank" rel="noopener">nixeosoluciones.com</a> — Fansite Latam. Todos los derechos reservados.</p>
-        <p style="margin-top:0.25rem">Diseño inspirado en <a href="https://github.com/dfface/epub-browser" target="_blank" rel="noopener">epub-browser</a></p>
       </div>
     </div>
   `;
