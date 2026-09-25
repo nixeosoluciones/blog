@@ -17,15 +17,15 @@ function getVisitorId() {
 
 export async function getRatingByStory(storyId) {
   const visitorId = getVisitorId();
+  // Un solo where: evita requerir índice compuesto en Firestore.
   const q = query(
     collection(db, COLLECTION),
-    where('storyId', '==', storyId),
-    where('visitorIdentifier', '==', visitorId)
+    where('storyId', '==', storyId)
   );
   const snapshot = await getDocs(q);
-  if (snapshot.empty) return null;
-  const doc = snapshot.docs[0];
-  return { id: doc.id, ...doc.data() };
+  const found = snapshot.docs.find(d => d.data().visitorIdentifier === visitorId);
+  if (!found) return null;
+  return { id: found.id, ...found.data() };
 }
 
 export async function submitRating(storyId, rating) {

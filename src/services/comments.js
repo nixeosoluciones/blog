@@ -7,25 +7,37 @@ import { db } from './firebase';
 const COLLECTION = 'comments';
 
 export async function getCommentsByChapter(chapterId) {
+  // Sin orderBy ni doble where: evita requerir índice compuesto en Firestore.
+  // Se filtra por estado y se ordena en cliente.
   const q = query(
     collection(db, COLLECTION),
-    where('chapterId', '==', chapterId),
-    where('status', '==', 'approved'),
-    orderBy('createdAt', 'asc')
+    where('chapterId', '==', chapterId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs
+    .map(doc => ({ id: doc.id, ...doc.data() }))
+    .filter(c => c.status === 'approved')
+    .sort((a, b) => {
+      const ta = a.createdAt?.toMillis?.() ?? 0;
+      const tb = b.createdAt?.toMillis?.() ?? 0;
+      return ta - tb;
+    });
 }
 
 export async function getCommentsByStory(storyId) {
   const q = query(
     collection(db, COLLECTION),
-    where('storyId', '==', storyId),
-    where('status', '==', 'approved'),
-    orderBy('createdAt', 'asc')
+    where('storyId', '==', storyId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs
+    .map(doc => ({ id: doc.id, ...doc.data() }))
+    .filter(c => c.status === 'approved')
+    .sort((a, b) => {
+      const ta = a.createdAt?.toMillis?.() ?? 0;
+      const tb = b.createdAt?.toMillis?.() ?? 0;
+      return ta - tb;
+    });
 }
 
 export async function getAllCommentsAdmin() {
