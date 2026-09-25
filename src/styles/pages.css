@@ -342,10 +342,21 @@
   background: var(--bg-tertiary);
 }
 
+.author-card-text {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
 .author-card-name {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 @media (min-width: 640px) {
@@ -360,6 +371,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 @media (min-width: 640px) {

@@ -113,7 +113,7 @@ function renderAuthorsGrid(authors) {
         ? `<img src="${author.photoUrl}" alt="${author.name}" class="author-card-avatar" loading="lazy">`
         : `<div class="author-card-avatar"></div>`
       }
-      <div>
+      <div class="author-card-text">
         <h3 class="author-card-name">${author.name}</h3>
         <p class="author-card-bio">${truncate(author.bio, 80)}</p>
       </div>
