@@ -92,6 +92,47 @@ export function setFontSizePreference(size) {
   localStorage.setItem('font_size', size);
 }
 
+const READER_DEFAULTS = {
+  theme: 'auto',       // auto | light | sepia | dark
+  fontFamily: 'serif', // serif | sans
+  fontSize: 18,        // px, 14 - 24
+  lineHeight: 1.85,    // 1.5 - 2.2
+  contentWidth: 'medium', // narrow | medium | wide
+  justify: true,
+};
+
+export function getReaderPrefs() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('reader_prefs') || '{}');
+    return { ...READER_DEFAULTS, ...saved };
+  } catch {
+    return { ...READER_DEFAULTS };
+  }
+}
+
+export function setReaderPrefs(patch) {
+  const prefs = { ...getReaderPrefs(), ...patch };
+  localStorage.setItem('reader_prefs', JSON.stringify(prefs));
+  return prefs;
+}
+
+export function getChapterScrollProgress(storyId, chapterId) {
+  try {
+    const all = JSON.parse(localStorage.getItem('chapter_scroll_progress') || '{}');
+    return all[storyId + ':' + chapterId] || 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function setChapterScrollProgress(storyId, chapterId, percent) {
+  try {
+    const all = JSON.parse(localStorage.getItem('chapter_scroll_progress') || '{}');
+    all[storyId + ':' + chapterId] = percent;
+    localStorage.setItem('chapter_scroll_progress', JSON.stringify(all));
+  } catch {}
+}
+
 export function getThemePreference() {
   return localStorage.getItem('theme') || 'light';
 }

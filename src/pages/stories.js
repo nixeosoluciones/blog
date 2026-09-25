@@ -1,14 +1,23 @@
 import { getStories } from '../services/stories.js';
-import { renderStars, truncate } from '../utils/helpers.js';
+import { bookGridHTML, mountTagCloud } from '../components/bookCard.js';
 
 export async function renderStoriesPage() {
   const main = document.getElementById('main-content');
   main.innerHTML = `
-    <div class="container section">
-      <div class="section-header">
-        <h1 class="section-title">Todas las Historias</h1>
+    <div class="container">
+      <section class="library-overview" aria-labelledby="storiesHeading">
+        <div>
+          <p class="library-overview-kicker">Biblioteca</p>
+          <h1 id="storiesHeading">Historias</h1>
+        </div>
+        <div class="library-summary" id="stories-summary"></div>
+      </section>
+      <div class="lib-search">
+        <input type="text" id="stories-search" placeholder="Buscar por título, autor o etiqueta..." aria-label="Buscar historias">
+        <span class="lib-search-icon">🔍</span>
       </div>
-      <div class="stories-grid" id="all-stories-grid">
+      <div class="tag-cloud" id="stories-tags"></div>
+      <div class="book-grid" id="all-stories-grid">
         <div class="empty-state"><p>Cargando historias...</p></div>
       </div>
     </div>
@@ -17,27 +26,24 @@ export async function renderStoriesPage() {
   try {
     const stories = await getStories({ onlyPublished: true, limit: 50 });
     const grid = document.getElementById('all-stories-grid');
+    const summary = document.getElementById('stories-summary');
+    if (summary) {
+      const tagCount = new Set(stories.flatMap(s => s.tags || [])).size;
+      summary.innerHTML =
+        '<span class="library-summary-item">📚 <strong>' + stories.length + '</strong>&nbsp;historias</span>' +
+        '<span class="library-summary-item">🏷️ <strong>' + tagCount + '</strong>&nbsp;etiquetas</span>';
+    }
     if (!stories.length) {
       grid.innerHTML = '<div class="empty-state"><h3>No hay historias</h3><p>Próximamente habrá contenido disponible.</p></div>';
       return;
     }
-    grid.innerHTML = stories.map(story => `
-      <a href="/historias/${story.slug}" data-link class="story-card">
-        ${story.coverImageUrl
-          ? `<img src="${story.coverImageUrl}" alt="${story.title}" class="story-card-cover" loading="lazy">`
-          : `<div class="story-card-cover"></div>`
-        }
-        <div class="story-card-body">
-          <span class="story-card-category">${story.categoryName || 'Sin categoría'}</span>
-          <h3 class="story-card-title">${story.title}</h3>
-          <p class="story-card-desc">${truncate(story.description, 120)}</p>
-          <div class="story-card-meta">
-            <span class="story-card-rating">${renderStars(story.averageRating || 0)} ${story.averageRating ? story.averageRating.toFixed(1) : '0.0'}</span>
-            <span>${story.chapterCount || 0} capítulos</span>
-          </div>
-        </div>
-      </a>
-    `).join('');
+    grid.innerHTML = bookGridHTML(stories);
+    mountTagCloud({
+      container: document.getElementById('stories-tags'),
+      searchInput: document.getElementById('stories-search'),
+      grid,
+      stories,
+    });
   } catch (error) {
     console.error('Error loading stories:', error);
   }

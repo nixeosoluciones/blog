@@ -1,6 +1,6 @@
 import { getAuthorBySlug } from '../services/authors.js';
 import { getStories } from '../services/stories.js';
-import { renderStars, truncate } from '../utils/helpers.js';
+import { bookGridHTML } from '../components/bookCard.js';
 
 export async function renderAuthorPage(params) {
   const main = document.getElementById('main-content');
@@ -32,20 +32,8 @@ export async function renderAuthorPage(params) {
           '</div>' +
         '</div>' +
         '<h2 style="margin-bottom:1rem">Historias publicadas</h2>' +
-        '<div class="stories-grid">' +
-          (stories.length ? stories.map(s =>
-            '<a href="/historias/' + s.slug + '" data-link class="story-card">' +
-              (s.coverImageUrl ? '<img src="' + s.coverImageUrl + '" alt="' + s.title + '" class="story-card-cover" loading="lazy">' : '<div class="story-card-cover"></div>') +
-              '<div class="story-card-body">' +
-                '<h3 class="story-card-title">' + s.title + '</h3>' +
-                '<p class="story-card-desc">' + truncate(s.description, 100) + '</p>' +
-                '<div class="story-card-meta">' +
-                  '<span class="story-card-rating">' + renderStars(s.averageRating || 0) + ' ' + (s.averageRating ? s.averageRating.toFixed(1) : '0.0') + '</span>' +
-                  '<span>' + (s.chapterCount || 0) + ' capítulos</span>' +
-                '</div>' +
-              '</div>' +
-            '</a>'
-          ).join('') : '<div class="empty-state"><p>Este autor aún no ha publicado historias.</p></div>') +
+        '<div class="book-grid">' +
+          (stories.length ? bookGridHTML(stories) : '<div class="empty-state"><p>Este autor aún no ha publicado historias.</p></div>') +
         '</div>' +
       '</div>';
   } catch (error) {

@@ -3,7 +3,8 @@ import { getChapterBySlug, getChaptersByStory } from '../services/chapters.js';
 import { getCommentsByChapter, createComment } from '../services/comments.js';
 import { submitRating, getRatingByStory } from '../services/ratings.js';
 import { renderTipTapContent } from '../utils/sanitize.js';
-import { renderStars, formatDate, estimateReadTime, countWords, countChars, getFontSizePreference, setFontSizePreference, setReadingProgress } from '../utils/helpers.js';
+import { renderStars, formatDate, estimateReadTime, countWords, countChars, setReadingProgress, getReaderPrefs, getChapterScrollProgress } from '../utils/helpers.js';
+import { mountReader, readerToolbarHTML, readerSettingsHTML, readerDrawerHTML } from '../components/reader.js';
 
 export async function renderChapterPage(params) {
   const main = document.getElementById('main-content');
@@ -27,53 +28,59 @@ export async function renderChapterPage(params) {
     const prevChapter = currentIndex > 0 ? allChapters[currentIndex - 1] : null;
     const nextChapter = currentIndex < allChapters.length - 1 ? allChapters[currentIndex + 1] : null;
 
-    const fontSizePref = getFontSizePreference();
+    const prefs = getReaderPrefs();
+    const savedPct = getChapterScrollProgress(story.id, chapter.id);
     const wordCount = countWords(chapter.content);
     const charCount = countChars(chapter.content);
     const readTime = estimateReadTime(chapter.content);
 
     setReadingProgress(story.id, chapter.id);
 
-    const fontSizeMap = { small: '0.95rem', medium: '1.1rem', large: '1.3rem' };
-    const fontSizeLabel = { small: 'Pequeño', medium: 'Normal', large: 'Grande' };
+    const prevHref = prevChapter ? '/historias/' + story.slug + '/' + prevChapter.slug : null;
+    const nextHref = nextChapter ? '/historias/' + story.slug + '/' + nextChapter.slug : null;
 
-    const prevBtn = prevChapter
-      ? '<a href="/historias/' + story.slug + '/' + prevChapter.slug + '" data-link class="chapter-nav-btn prev">← Anterior</a>'
-      : '<div class="chapter-nav-btn prev hidden"></div>';
-
-    const nextBtn = nextChapter
-      ? '<a href="/historias/' + story.slug + '/' + nextChapter.slug + '" data-link class="chapter-nav-btn next">Siguiente →</a>'
-      : '<div class="chapter-nav-btn next hidden"></div>';
-
-    const indexBtn = '<a href="/historias/' + story.slug + '" data-link class="chapter-nav-index">Índice</a>';
-
-    main.innerHTML = '<div class="chapter-page">' +
-      '<div class="chapter-header">' +
-        '<a href="/historias/' + story.slug + '" data-link class="chapter-story-link">' + story.title + '</a>' +
-        '<h1>' + chapter.title + '</h1>' +
-        '<div class="chapter-meta">' +
-          'Capítulo ' + (currentIndex + 1) + ' de ' + allChapters.length + ' · ' + readTime + ' de lectura' +
+    main.innerHTML =
+      '<div class="ebook-reader" id="ebook-reader">' +
+        readerToolbarHTML(savedPct) +
+        readerSettingsHTML(prefs) +
+        '<div class="reader-shell">' +
+          '<nav class="reader-crumbs">' +
+            '<a href="/" data-link>Inicio</a><span>/</span>' +
+            '<a href="/historias" data-link>Historias</a><span>/</span>' +
+            '<a href="/historias/' + story.slug + '" data-link>' + escapeHtml(story.title) + '</a>' +
+          '</nav>' +
+          '<div class="reader-title-block">' +
+            '<span class="reader-title-series">Capítulo ' + (currentIndex + 1) + ' de ' + allChapters.length + '</span>' +
+            '<h1>' + escapeHtml(chapter.title) + '</h1>' +
+            '<div class="reader-meta-row">' +
+              '<span>📖 ' + escapeHtml(story.title) + '</span>' +
+              '<span>⏱ ' + readTime + ' de lectura</span>' +
+              '<span>📝 ' + wordCount.toLocaleString() + ' palabras · ' + charCount.toLocaleString() + ' caracteres</span>' +
+            '</div>' +
+            '<div class="reader-resume" id="reader-resume"><span></span><button>Continuar</button></div>' +
+          '</div>' +
+          '<article class="reader-content-card" id="reader-content-card">' +
+            '<div class="reader-content" id="reader-content">' +
+              renderTipTapContent(chapter.content || '<p>Este capítulo no tiene contenido.</p>') +
+            '</div>' +
+          '</article>' +
+          '<div class="reader-bottom-nav"><div class="reader-bottom-inner">' +
+            (prevHref
+              ? '<a id="reader-prev-link" href="' + prevHref + '" data-link>← Anterior</a>'
+              : '<button disabled style="opacity:.4">← Anterior</button>') +
+            '<a href="/historias/' + story.slug + '" data-link>Índice</a>' +
+            (nextHref
+              ? '<a id="reader-next-link" class="primary" href="' + nextHref + '" data-link>Siguiente →</a>'
+              : '<button disabled style="opacity:.4">Fin ✓</button>') +
+          '</div></div>' +
+          '<div id="rating-section"></div>' +
+          '<div id="comments-section"></div>' +
         '</div>' +
-      '</div>' +
-      '<div class="reading-stats">' +
-        wordCount.toLocaleString() + ' palabras · ' + charCount.toLocaleString() + ' caracteres · ⏱ ' + readTime +
-      '</div>' +
-      '<div class="font-size-controls">' +
-        '<button id="font-decrease" title="Reducir tamaño">A−</button>' +
-        '<span id="font-size-label">' + (fontSizeLabel[fontSizePref] || 'Normal') + '</span>' +
-        '<button id="font-increase" title="Aumentar tamaño">A+</button>' +
-      '</div>' +
-      '<div class="chapter-content" id="chapter-content" style="font-size:' + (fontSizeMap[fontSizePref] || '1.1rem') + '">' +
-        renderTipTapContent(chapter.content || '<p>Este capítulo no tiene contenido.</p>') +
-      '</div>' +
-      '<div class="chapter-nav">' +
-        prevBtn + indexBtn + nextBtn +
-      '</div>' +
-      '<div id="rating-section"></div>' +
-      '<div id="comments-section"></div>' +
-    '</div>';
+        readerDrawerHTML(story, allChapters, chapter.id) +
+      '</div>';
 
-    setupFontSizeControls(story.id);
+    mountReader({ root: document.getElementById('ebook-reader'), story, chapter, chapters: allChapters, currentIndex });
+    window.scrollTo({ top: 0 });
     loadRating(story.id);
     loadComments(chapter.id);
 
@@ -81,34 +88,6 @@ export async function renderChapterPage(params) {
     console.error('Error loading chapter:', error);
     main.innerHTML = '<div class="container section"><div class="empty-state"><h3>Error al cargar el capítulo</h3></div></div>';
   }
-}
-
-function setupFontSizeControls(storyId) {
-  const sizes = ['small', 'medium', 'large'];
-  const sizeMap = { small: '0.95rem', medium: '1.1rem', large: '1.3rem' };
-  const labelMap = { small: 'Pequeño', medium: 'Normal', large: 'Grande' };
-
-  document.getElementById('font-decrease').addEventListener('click', function() {
-    const current = getFontSizePreference();
-    const idx = sizes.indexOf(current);
-    if (idx > 0) {
-      const next = sizes[idx - 1];
-      setFontSizePreference(next);
-      document.getElementById('chapter-content').style.fontSize = sizeMap[next];
-      document.getElementById('font-size-label').textContent = labelMap[next];
-    }
-  });
-
-  document.getElementById('font-increase').addEventListener('click', function() {
-    const current = getFontSizePreference();
-    const idx = sizes.indexOf(current);
-    if (idx < sizes.length - 1) {
-      const next = sizes[idx + 1];
-      setFontSizePreference(next);
-      document.getElementById('chapter-content').style.fontSize = sizeMap[next];
-      document.getElementById('font-size-label').textContent = labelMap[next];
-    }
-  });
 }
 
 async function loadRating(storyId) {
@@ -213,6 +192,6 @@ async function loadCommentsList(chapterId) {
 
 function escapeHtml(text) {
   const div = document.createElement('div');
-  div.textContent = text;
+  div.textContent = text || '';
   return div.innerHTML;
 }

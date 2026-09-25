@@ -1,5 +1,6 @@
 import { getCategories } from '../services/categories.js';
 import { truncate } from '../utils/helpers.js';
+import { bookGridHTML } from '../components/bookCard.js';
 
 export async function renderCategoriesPage() {
   const main = document.getElementById('main-content');
@@ -45,16 +46,8 @@ export async function renderCategoryPage(params) {
           '<a href="/categorias" data-link class="section-link">← Volver</a>' +
         '</div>' +
         '<p style="color:var(--text-secondary);margin-bottom:2rem">' + (category.description || '') + '</p>' +
-        '<div class="stories-grid">' +
-          (stories.length ? stories.map(s =>
-            '<a href="/historias/' + s.slug + '" data-link class="story-card">' +
-              (s.coverImageUrl ? '<img src="' + s.coverImageUrl + '" alt="' + s.title + '" class="story-card-cover" loading="lazy">' : '<div class="story-card-cover"></div>') +
-              '<div class="story-card-body">' +
-                '<h3 class="story-card-title">' + s.title + '</h3>' +
-                '<p class="story-card-desc">' + truncate(s.description, 100) + '</p>' +
-              '</div>' +
-            '</a>'
-          ).join('') : '<div class="empty-state"><p>No hay historias en esta categoría.</p></div>') +
+        '<div class="book-grid">' +
+          (stories.length ? bookGridHTML(stories) : '<div class="empty-state"><p>No hay historias en esta categoría.</p></div>') +
         '</div>' +
       '</div>';
   } catch (error) {
@@ -76,16 +69,8 @@ export async function renderTagPage(params) {
         '<div class="section-header">' +
           '<h1 class="section-title">#' + tag + '</h1>' +
         '</div>' +
-        '<div class="stories-grid">' +
-          (stories.length ? stories.map(s =>
-            '<a href="/historias/' + s.slug + '" data-link class="story-card">' +
-              (s.coverImageUrl ? '<img src="' + s.coverImageUrl + '" alt="' + s.title + '" class="story-card-cover" loading="lazy">' : '<div class="story-card-cover"></div>') +
-              '<div class="story-card-body">' +
-                '<h3 class="story-card-title">' + s.title + '</h3>' +
-                '<p class="story-card-desc">' + truncate(s.description, 100) + '</p>' +
-              '</div>' +
-            '</a>'
-          ).join('') : '<div class="empty-state"><p>No hay historias con esta etiqueta.</p></div>') +
+        '<div class="book-grid">' +
+          (stories.length ? bookGridHTML(stories) : '<div class="empty-state"><p>No hay historias con esta etiqueta.</p></div>') +
         '</div>' +
       '</div>';
   } catch (error) {

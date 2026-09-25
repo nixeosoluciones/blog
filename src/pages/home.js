@@ -1,25 +1,30 @@
 import { getStories } from '../services/stories.js';
 import { getCategories } from '../services/categories.js';
 import { getAuthors } from '../services/authors.js';
-import { renderStars, truncate, formatDate } from '../utils/helpers.js';
+import { truncate } from '../utils/helpers.js';
+import { bookGridHTML } from '../components/bookCard.js';
 
 export async function renderHomePage() {
   const main = document.getElementById('main-content');
   main.innerHTML = `
-    <div class="hero">
-      <div class="container">
-        <h1>Historias Alternativas</h1>
-        <p>Descubre mundos alternativos, fan fiction y relatos creados por la comunidad.</p>
-        <a href="/historias" data-link class="btn btn-lg" style="background:white;color:var(--color-primary)">Explorar historias</a>
-      </div>
-    </div>
     <div class="container">
+      <section class="library-overview" aria-labelledby="libraryHeading">
+        <div>
+          <p class="library-overview-kicker">Fansite Latam</p>
+          <h1 id="libraryHeading">Biblioteca</h1>
+          <p class="library-overview-sub">Descubre mundos alternativos, fan fiction y relatos creados por la comunidad.</p>
+        </div>
+        <div class="library-summary" id="library-summary">
+          <span class="library-summary-item">📚 <strong>…</strong>&nbsp;historias</span>
+          <span class="library-summary-item">🏷️ <strong>…</strong>&nbsp;categorías</span>
+        </div>
+      </section>
       <section class="section" id="recent-stories">
         <div class="section-header">
           <h2 class="section-title">Historias Recientes</h2>
           <a href="/historias" data-link class="section-link">Ver todas →</a>
         </div>
-        <div class="stories-grid" id="recent-grid">
+        <div class="book-grid" id="recent-grid">
           <div class="empty-state"><p>Cargando historias...</p></div>
         </div>
       </section>
@@ -27,7 +32,7 @@ export async function renderHomePage() {
         <div class="section-header">
           <h2 class="section-title">Historias Populares</h2>
         </div>
-        <div class="stories-grid" id="popular-grid">
+        <div class="book-grid" id="popular-grid">
           <div class="empty-state"><p>Cargando...</p></div>
         </div>
       </section>
@@ -63,41 +68,23 @@ async function loadHomeData() {
       getAuthors(),
     ]);
 
+    const summary = document.getElementById('library-summary');
+    if (summary) {
+      summary.innerHTML =
+        '<span class="library-summary-item">📚 <strong>' + allStories.length + '</strong>&nbsp;historias</span>' +
+        '<span class="library-summary-item">🏷️ <strong>' + categories.length + '</strong>&nbsp;categorías</span>';
+    }
+
     const recent = allStories.slice(0, 6);
     const popular = [...allStories].sort((a, b) => (b.ratingCount || 0) - (a.ratingCount || 0)).slice(0, 6);
 
-    renderStoriesGrid('recent-grid', recent);
-    renderStoriesGrid('popular-grid', popular);
+    document.getElementById('recent-grid').innerHTML = bookGridHTML(recent);
+    document.getElementById('popular-grid').innerHTML = bookGridHTML(popular);
     renderCategoriesGrid(categories);
     renderAuthorsGrid(authors);
   } catch (error) {
     console.error('Error loading home data:', error);
   }
-}
-
-function renderStoriesGrid(containerId, stories) {
-  const grid = document.getElementById(containerId);
-  if (!stories.length) {
-    grid.innerHTML = '<div class="empty-state"><p>No hay historias disponibles.</p></div>';
-    return;
-  }
-  grid.innerHTML = stories.map(story => `
-    <a href="/historias/${story.slug}" data-link class="story-card">
-      ${story.coverImageUrl
-        ? `<img src="${story.coverImageUrl}" alt="${story.title}" class="story-card-cover" loading="lazy">`
-        : `<div class="story-card-cover"></div>`
-      }
-      <div class="story-card-body">
-        <span class="story-card-category">${story.categoryName || 'Sin categoría'}</span>
-        <h3 class="story-card-title">${story.title}</h3>
-        <p class="story-card-desc">${truncate(story.description, 100)}</p>
-        <div class="story-card-meta">
-          <span class="story-card-rating">${renderStars(story.averageRating || 0)} ${story.averageRating ? story.averageRating.toFixed(1) : '0.0'}</span>
-          <span>${story.chapterCount || 0} capítulos</span>
-        </div>
-      </div>
-    </a>
-  `).join('');
 }
 
 function renderCategoriesGrid(categories) {
@@ -126,8 +113,10 @@ function renderAuthorsGrid(authors) {
         ? `<img src="${author.photoUrl}" alt="${author.name}" class="author-card-avatar" loading="lazy">`
         : `<div class="author-card-avatar"></div>`
       }
-      <h3 class="author-card-name">${author.name}</h3>
-      <p class="author-card-bio">${truncate(author.bio, 80)}</p>
+      <div>
+        <h3 class="author-card-name">${author.name}</h3>
+        <p class="author-card-bio">${truncate(author.bio, 80)}</p>
+      </div>
     </a>
   `).join('');
 }

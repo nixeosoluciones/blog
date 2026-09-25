@@ -1,9 +1,11 @@
 import './styles/base.css';
 import './styles/components.css';
+import './styles/library.css';
 import './styles/footer.css';
 import './styles/pages.css';
 import './styles/story.css';
 import './styles/chapter.css';
+import './styles/reader.css';
 import './styles/admin.css';
 import './styles/editor.css';
 
@@ -88,6 +90,7 @@ async function init() {
   await initAuth();
   window.__getCurrentUser = getUser;
   initRouter();
+  initBackToTop();
   } catch (error) {
     console.error('Error inicializando la app:', error);
     document.getElementById('main-content').innerHTML =
@@ -106,3 +109,15 @@ async function init() {
 }
 
 init();
+
+function initBackToTop() {
+  const btn = document.createElement('button');
+  btn.className = 'back-to-top';
+  btn.setAttribute('aria-label', 'Volver arriba');
+  btn.innerHTML = '↑<small>Top</small>';
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  document.body.appendChild(btn);
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
+}

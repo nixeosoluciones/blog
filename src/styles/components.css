@@ -1,37 +1,28 @@
 .header {
   position: sticky;
-  top: 8px;
+  top: 0;
   z-index: 100;
-  padding: 0 8px;
-}
-
-@media (min-width: 640px) {
-  .header {
-    top: 12px;
-    padding: 0 12px;
-  }
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
+  gap: 0.75rem;
+  height: 60px;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 0.75rem;
-  background: var(--header-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  padding: 0 1rem;
 }
 
 @media (min-width: 640px) {
   .header-inner {
-    height: 56px;
-    padding: 0 1.25rem;
+    height: 64px;
+    padding: 0 1.5rem;
   }
 }
 
@@ -95,15 +86,18 @@
   color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 500;
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   border-radius: var(--radius-md);
   transition: all var(--transition);
 }
 
-.header-nav a:hover,
+.header-nav a:hover {
+  color: var(--color-primary);
+}
+
 .header-nav a.active {
-  color: var(--text-primary);
-  background: var(--bg-hover);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 
 .header-actions {
@@ -134,14 +128,14 @@
 .btn-primary {
   background: var(--color-primary);
   color: white;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
 }
 
 .btn-primary:hover {
   background: var(--color-primary-hover);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 16px rgba(67, 97, 238, 0.4);
 }
 
 .btn-secondary {
@@ -267,27 +261,24 @@
 .mobile-menu {
   display: none;
   position: fixed;
-  top: 68px;
-  left: 8px;
-  right: 8px;
+  top: 60px;
+  left: 0;
+  right: 0;
   background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   z-index: 99;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem 1rem;
   overflow-y: auto;
-  max-height: calc(100vh - 80px);
+  max-height: calc(100vh - 70px);
 }
 
 @media (min-width: 640px) {
   .mobile-menu {
-    top: 80px;
-    left: 12px;
-    right: 12px;
-    padding: 1rem;
+    top: 64px;
+    padding: 1rem 1.5rem 1.25rem;
   }
 }
 
