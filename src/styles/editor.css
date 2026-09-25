@@ -1,6 +1,6 @@
 .editor-content .ProseMirror {
   outline: none;
-  min-height: 400px;
+  min-height: 280px;
 }
 
 .editor-content .ProseMirror p {
@@ -105,12 +105,22 @@
 }
 
 .tiptap-editor {
-  min-height: 400px;
-  padding: 1.5rem;
+  min-height: 280px;
+  padding: 1rem;
   outline: none;
   font-size: 1rem;
   line-height: 1.8;
   color: var(--text-primary);
+}
+
+@media (min-width: 640px) {
+  .tiptap-editor {
+    min-height: 400px;
+    padding: 1.5rem;
+  }
+  .editor-content .ProseMirror {
+    min-height: 400px;
+  }
 }
 
 .tiptap-editor p {

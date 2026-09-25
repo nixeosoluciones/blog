@@ -78,7 +78,11 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.reader-toolbar-inner::-webkit-scrollbar { display: none; }
 .reader-tool-btn {
   display: inline-flex;
   align-items: center;
@@ -95,19 +99,27 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .reader-tool-btn:hover,
 .reader-tool-btn.active {
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
-.reader-toolbar-spacer { flex: 1; }
+.reader-toolbar-spacer { flex: 1 0 0.25rem; }
 .reader-progress-label {
   font-size: 0.72rem;
   color: var(--reader-muted);
   min-width: 44px;
   text-align: right;
   font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* Pantallas muy angostas: toolbar compacta con scroll horizontal */
+@media (max-width: 400px) {
+  .reader-toolbar-inner { gap: 0.3rem; padding: 0.45rem 0.5rem; }
+  .reader-tool-btn { min-width: 32px; height: 32px; padding: 0 0.4rem; font-size: 0.8rem; }
 }
 
 /* Migas + cabecera estilo ficha de libro */

@@ -426,3 +426,11 @@
   font-size: 0.5rem;
   line-height: 1;
 }
+
+/* En móvil sube para no tapar la navegación inferior del lector */
+@media (max-width: 640px) {
+  .back-to-top {
+    bottom: 84px;
+    right: 16px;
+  }
+}

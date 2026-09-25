@@ -120,6 +120,33 @@ button {
   font-size: inherit;
 }
 
+button, a {
+  touch-action: manipulation;
+}
+
+/* Objetivos táctiles mínimos en pantallas táctiles */
+@media (pointer: coarse) {
+  .toolbar-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .reader-tool-btn {
+    min-height: 40px;
+  }
+  .font-size-controls button {
+    width: 40px;
+    height: 40px;
+  }
+  .rating-star-btn {
+    padding: 0.5rem;
+  }
+  .theme-toggle,
+  .hamburger {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 input, textarea, select {
   font-family: inherit;
   font-size: inherit;

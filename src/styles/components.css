@@ -225,6 +225,22 @@
   color: var(--text-secondary);
 }
 
+/* En pantallas muy angostas el header muestra solo el icono de buscar */
+@media (max-width: 400px) {
+  .search-btn span {
+    display: none;
+  }
+  .search-btn {
+    padding: 0.35rem 0.5rem;
+  }
+  .header-logo span {
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .theme-toggle {
   width: 32px;
   height: 32px;

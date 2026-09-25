@@ -288,9 +288,17 @@
 }
 
 .admin-table {
+  display: block;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.admin-table thead,
+.admin-table tbody {
+  display: table;
+  width: 100%;
+  min-width: 560px;
 }
 
 .admin-table table {
